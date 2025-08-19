@@ -4,16 +4,21 @@ import PostPublish from "../utils/post-publish";
 
 
 export async function POST(request: NextRequest) {
-    const data = await request.json();
+    try {
+        const data = await request.json();
 
-    const post = new PostPublish();
+        const post = new PostPublish();
 
-    post.validatePost(data);
+        await post.run(data.title, data.description, data.author);
 
-    post.savePost(data);
-
-    return NextResponse.json({
-        message: 'Post Save Correctly'
-    });
+        return NextResponse.json({
+            message: 'Post Save Correctly'
+        });
+    } catch (error) {
+        console.error('Error saving post:', error);
+        return NextResponse.json({
+            error: "Failed to save post"
+        })
+    }
 
 }

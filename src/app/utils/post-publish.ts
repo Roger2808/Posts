@@ -1,33 +1,23 @@
 import postgres from "postgres";
+import Post from "./post";
 
 export default class PostPublish {
     constructor () {}
 
-    public async savePost(data: any): Promise<void>{
-    const connectionString = 'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
-    const sql = postgres(connectionString);
-
-    await sql`INSERT INTO "Posts" (title, description, author) VALUES (${data.title}, ${data.description}, ${data.author});`;
-
+    public async run(title: string, description: string, author: string){
+        const post = Post.create(title, description, author);
+        await this.savePost(post);
     }
 
-    public async validatePost(data: any){
-        if (!data.title || data.title.length === 0) {
-            throw new Error("Title can't be empty.");
-        }
-        if (data.title[0] !== data.title[0].toUpperCase()) {
-            throw new Error("Titulo debe iniciar con mayuscula.");
-        }
+    public async savePost(data: Post): Promise<void>{
+        const connectionString = 'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
+        const sql = postgres(connectionString);
 
-        if (!data.description || data.description.length === 0) {
-            throw new Error("Description can't be empty.");
-        }
+        const title = data.title;
+        const description = data.description;
+        const author = data.author;
 
-        if (!data.author || data.author.length === 0) {
-            throw new Error("Author can't be empty.");
-        }
-        if (data.author[0] !== data.author[0].toUpperCase()) {
-            throw new Error("Autor debe iniciar con mayuscula.");
-        }
+        await sql`INSERT INTO "Posts" (title, description, author) VALUES (${title.value}, ${description.value}, ${author.value});`;
+
     }
 }
