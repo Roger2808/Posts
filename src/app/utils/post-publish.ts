@@ -7,7 +7,7 @@ export default class PostPublish {
     const connectionString = 'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
     const sql = postgres(connectionString);
 
-    await sql`INSERT INTO Posts (title, description, author) VALUES (${data.title}, ${data.description}, ${data.author});`;
+    await sql`INSERT INTO "Posts" (title, description, author) VALUES (${data.title}, ${data.description}, ${data.author});`;
 
     }
 
