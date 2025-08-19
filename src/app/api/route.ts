@@ -23,4 +23,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({message:"El autor debe empezar con mayúscula."});
     }
     
+    const connectionString = 'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
+    const sql = postgres(connectionString);
+
 }
