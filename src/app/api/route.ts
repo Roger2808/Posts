@@ -26,4 +26,10 @@ export async function POST(request: NextRequest) {
     const connectionString = 'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
     const sql = postgres(connectionString);
 
+    await sql`INSERT INTO Posts (title, description, author) VALUES (${data.title}, ${data.description}, ${data.author});`;
+
+    return NextResponse.json({
+        message: 'Post Save Correctly'
+    });
+
 }
