@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import PostPublish from "../utils/post-publish";
 import PostgresPostRepository from "../utils/postgres-post-repository";
+import postgres from "postgres";
 
 
 export async function POST(request: NextRequest) {
@@ -23,4 +24,17 @@ export async function POST(request: NextRequest) {
         })
     }
 
+}
+
+
+export async function GET(){
+    try {
+        const connectionString = 
+            'postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres';
+        const sql = postgres(connectionString);
+        const posts = await sql`SELECT * FROM "Posts"`;
+        return NextResponse.json(posts);
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 }
