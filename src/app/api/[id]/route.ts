@@ -1,17 +1,17 @@
+import PostDelete from "@/app/utils/post-delete";
+import PostUpdate from "@/app/utils/post-update";
+import PostgresPostRepository from "@/app/utils/postgres-post-repository";
 import { NextRequest, NextResponse } from "next/server";
-import postgres from "postgres";
-
-const sql = postgres("postgresql://postgres.ngqewaaalsclmldmhwbm:IbanezGio28*@aws-1-us-east-2.pooler.supabase.com:6543/postgres");
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const data = await request.json();
-        const { title, description, author } = data;
+        
+        const repository = new PostgresPostRepository;
 
-        await sql`
-        UPDATE "Posts" SET title = ${title}, description = ${description}, author = ${author}
-        WHERE id = ${params.id}
-        `;
+        const post = new PostUpdate(repository);
+
+        await post.run(data.title, data.description, data.author, params.id);
 
         return NextResponse.json({ message: "Post actualizado correctamente" });
     } catch (error: any) {
@@ -21,7 +21,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        await sql`DELETE FROM "Posts" WHERE id = ${params.id}`;
+        const data = await request.json()
+
+        const repository = new PostgresPostRepository;
+
+        const post = new PostDelete(repository);
+
+        await post.run(params.id);
+
         return NextResponse.json({ message: "Post eliminado correctamente" });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });

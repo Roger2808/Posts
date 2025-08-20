@@ -20,4 +20,31 @@ export default class PostgresPostRepository implements PostRepository{
             throw new Error("Failed to save post");
         }
     }
+
+    async view(){
+        try {
+            const posts = await this.sql`SELECT * FROM "Posts"`;
+            return posts;
+        } catch (error: any) {
+            throw new Error("500")
+        }
+    }
+
+    async modify(title: string, description: string, author: string, id: string){
+        try {
+            await this.sql`
+            UPDATE "Posts" SET title = ${title}, description = ${description}, author = ${author}
+            WHERE id = ${id}`;
+        } catch (error: any) {
+            throw new Error("Error al modificar");
+        }
+    }
+
+    async delete(id: string){
+        try {
+            await this.sql`DELETE FROM "Posts" WHERE id = ${id}`;
+        } catch (error: any) {
+            throw new Error("500");
+        }
+    }
 }
