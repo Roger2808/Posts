@@ -1,13 +1,15 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import PostPublish from "../utils/post-publish";
+import PostgresPostRepository from "../utils/postgres-post-repository";
 
 
 export async function POST(request: NextRequest) {
     try {
         const data = await request.json();
 
-        const post = new PostPublish();
+        const repository = new PostgresPostRepository;
+
+        const post = new PostPublish(repository);
 
         await post.run(data.title, data.description, data.author);
 
